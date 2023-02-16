@@ -50,7 +50,8 @@ class MyGUI:
         dropdown2 = tk.OptionMenu(self.window, defaultBaudrateDD, *baudrates)
         dropdown2.grid(row=2, column=5, padx=40)
 
-        commentBaudrate = tk.Label(self.window, text="Baudrate must be same as \n configured in Arduino code \n\n If unknown, use 115200!", font=('Calibre', 10))
+        commentBaudrate = tk.Label(self.window, text="Baudrate must be same as \n configured in Arduino code \n\n" 
+                                   "If unknown, use 115200!", font=('Calibre', 10))
         commentBaudrate.grid(row=3, column=5, padx=40)
 
         #layoutframe.pack(fill='x')
