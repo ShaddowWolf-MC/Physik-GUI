@@ -55,7 +55,7 @@ class MyGUI:
         btn1.grid(row=0, column=0, sticky=tk.W)
         
         
-        #dropdown1 = tk.OptionMenu(self.window, defaultComDD, *comlist, command=ParseValues, )
+        dropdown1 = tk.OptionMenu(self.window, defaultComDD, *comlist, command=ParseValues, )
         #dropdown1 = ttk.OptionMenu(self, self.option_var, *self.optionsTest.keys(), command=self.option_changed)
         dropdown1.grid(row=2, column=2, padx=60)
 
