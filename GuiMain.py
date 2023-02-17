@@ -11,7 +11,7 @@ import sys
 
 print("TKinter Version", tk.TkVersion)
 print("Python Version", sys.version)
-
+#Testdata to confirm working code
 
 class MyGUI:
     def __init__(self):
@@ -32,6 +32,7 @@ class MyGUI:
         defaultBaudrateDD = StringVar(self.window)
         defaultBaudrateDD.set("Choose Baudrate")
         baudrates = [300, 600, 1200, 2400, 4800, 9600, 14400, 19200, 28800, 31250, 38400, 57600, 115200]
+        #Possible baudrates for the Arduino, should usually be 115200
 
         layoutframe = tk.Frame(self.window)
         layoutframe.columnconfigure(0, weight=1, uniform='sixth')
@@ -40,6 +41,8 @@ class MyGUI:
         layoutframe.columnconfigure(3, weight=1, uniform='sixth')
         layoutframe.columnconfigure(4, weight=1, uniform='sixth')
         layoutframe.columnconfigure(5, weight=1, uniform='sixth')
+        #colums for my gui, will utilise later
+
 
         btn1 = tk.Button(layoutframe, text='1', font=('Arial', 20))
         btn1.grid(row=0, column=0, sticky=tk.W)
@@ -78,7 +81,7 @@ class MyGUI:
     def show_message(self):
         if self.check_state.get() == 0:
             #when starting in the beginning of the Textbox we need index 1 as a string, and index to as the end
-            #also: the index starts at fucking 1, why???
+            #also: the index starts at 1, why???
             print(self.textbox.get('1.0', tk.END)) 
         else:
             messagebox.showinfo(title="Message", message=self.textbox.get('1.0', tk.END))
@@ -95,3 +98,4 @@ class MyGUI:
 
 
 MyGUI()
+#calls class to run programm
