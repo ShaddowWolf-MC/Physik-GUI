@@ -25,9 +25,12 @@ class MyGUI:
         for element in comlist:
             connected.append(element.device)
         print("Connected COM ports: " + str(connected))
+        #get all conected com ports
+
 
         defaultComDD = StringVar(self.window)
         defaultComDD.set("Choose COMport")
+        #string for Dropdown menu
 
         defaultBaudrateDD = StringVar(self.window)
         defaultBaudrateDD.set("Choose Baudrate")
@@ -49,9 +52,11 @@ class MyGUI:
         
         dropdown1 = tk.OptionMenu(self.window, defaultComDD, *comlist)
         dropdown1.grid(row=2, column=2, padx=60)
+        #dropdown for choosing the comport
 
         dropdown2 = tk.OptionMenu(self.window, defaultBaudrateDD, *baudrates)
         dropdown2.grid(row=2, column=5, padx=40)
+        #dropdown for choosing the baudrate
 
         commentBaudrate = tk.Label(self.window, text="Baudrate must be same as \n configured in Arduino code \n\n" 
                                    "If unknown, use 115200!", font=('Calibre', 10))
