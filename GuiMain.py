@@ -40,6 +40,9 @@ class MyGUI:
         baudrates = [300, 600, 1200, 2400, 4800, 9600, 14400, 19200, 28800, 31250, 38400, 57600, 115200]
         #Possible baudrates for the Arduino, should usually be 115200
 
+        self.showDropdowns = tk.BooleanVar(self.window)
+        self.showDropdowns = True
+
         layoutframe = tk.Frame(self.window)
         layoutframe.columnconfigure(0, weight=1, uniform='sixth')
         layoutframe.columnconfigure(1, weight=1, uniform='sixth')
@@ -50,15 +53,18 @@ class MyGUI:
         #colums for my gui, will utilise later
 
 
-        btn1 = tk.Button(self.window, text='Set Port / baudrate', font=('Arial', 13), command=lambda: self.my_show())
+        btn1 = tk.Button(self.window, text='Set Port / baudrate', font=('Arial', 13),
+                          command= lambda: [self.setValues(), self.dropdown1.grid_forget(), self.dropdown2.grid_forget()])
         btn1.grid(row=2, column=5)
         
-        dropdown1 = tk.OptionMenu(self.window, self.defaultComDD, *comlist)
-        dropdown1.grid(row=2, column=2, padx=60)
+        self.dropdown1 = tk.OptionMenu(self.window, self.defaultComDD, *comlist)
+        self.dropdown1.grid(row=2, column=2, padx=60)
         #dropdown for choosing the comport
+        
+        
 
-        dropdown2 = tk.OptionMenu(self.window, self.defaultBaudrateDD, *baudrates)
-        dropdown2.grid(row=2, column=4, padx=40)
+        self.dropdown2 = tk.OptionMenu(self.window, self.defaultBaudrateDD, *baudrates)
+        self.dropdown2.grid(row=2, column=4, padx=40)
         #dropdown for choosing the baudrate
 
         commentBaudrate = tk.Label(self.window, text="Baudrate must be same as \n configured in Arduino code \n\n" 
@@ -92,7 +98,7 @@ class MyGUI:
 
         self.window.mainloop()
 
-    def my_show(self):
+    def setValues(self):
         #self.str_out.set(self.defaultComDD.get())
         print(self.defaultComDD.get())
         self.defaultComDD = self.defaultComDD.get()
@@ -101,6 +107,11 @@ class MyGUI:
         self.defaultBaudrateDD = self.defaultBaudrateDD.get()
         print(self.defaultBaudrateDD)
         #Changes the value of defaultComDD and defaultBaudrateDD to the selected values
+        self.showDropdowns = False
+
+        
+        
+
         
 
 
