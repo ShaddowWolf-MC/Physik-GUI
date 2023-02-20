@@ -6,7 +6,8 @@ import serial.tools.list_ports
 import sys
 
 
-
+baudrate = 115200
+comport = 'com1'
 #arduinoData = serial.Serial('com3')
 
 print("TKinter Version", tk.TkVersion)
@@ -54,13 +55,22 @@ class MyGUI:
 
 
         btn1 = tk.Button(self.window, text='Set Port / baudrate', font=('Arial', 13),
-                          command= lambda: [self.setValues(), self.dropdown1.grid_forget(), self.dropdown2.grid_forget()])
+                          command= lambda: [self.setValues(), self.dropdown1.grid_forget(), self.dropdown2.grid_forget(),
+                                            self.text1.grid(row=2, column=2, padx=60), self.text2.grid(row=2, column=4, padx=40)])
         btn1.grid(row=2, column=5)
         
+
+
         self.dropdown1 = tk.OptionMenu(self.window, self.defaultComDD, *comlist)
         self.dropdown1.grid(row=2, column=2, padx=60)
         #dropdown for choosing the comport
         
+        self.portText = "Value fetching failed"
+        self.baudText = "Value fetching failed"
+
+
+        self.text1 = tk.Label(self.window, text= self.portText)
+        self.text2 = tk.Label(self.window, text=("Baudrate = ", baudrate))
         
 
         self.dropdown2 = tk.OptionMenu(self.window, self.defaultBaudrateDD, *baudrates)
@@ -101,18 +111,17 @@ class MyGUI:
     def setValues(self):
         #self.str_out.set(self.defaultComDD.get())
         print(self.defaultComDD.get())
-        self.defaultComDD = self.defaultComDD.get()
-        print(self.defaultComDD)
+        comport = self.defaultComDD.get()
+        print(comport)
         print(self.defaultBaudrateDD.get())
-        self.defaultBaudrateDD = self.defaultBaudrateDD.get()
-        print(self.defaultBaudrateDD)
+        baudrate = self.defaultBaudrateDD.get()
+        print(baudrate)
         #Changes the value of defaultComDD and defaultBaudrateDD to the selected values
-        self.showDropdowns = False
-
-        
-        
-
-        
+    
+        comport = self.defaultComDD.get().removesuffix("- Kommunikationsanschluss (COM1)") 
+        self.text1['text'] = "Port = " + comport 
+        self.text2['text'] = "Baudrate = " + self.defaultBaudrateDD.get()
+        setupArduino()        
 
 
     def show_message(self):
@@ -127,6 +136,8 @@ class MyGUI:
 
     #def setBitrate(self):
 
+def setupArduino():
+    arduinoData = serial.Serial(comport)
 
 
 
