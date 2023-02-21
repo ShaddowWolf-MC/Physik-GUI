@@ -4,6 +4,8 @@ from tkinter import StringVar
 import serial
 import serial.tools.list_ports
 import sys
+import time
+
 
 
 baudrate = 115200
@@ -55,9 +57,10 @@ class MyGUI:
 
 
         btn1 = tk.Button(self.window, text='Set Port / baudrate', font=('Arial', 13),
-                          command= lambda: [self.setValues(), self.dropdown1.grid_forget(), self.dropdown2.grid_forget(),
-                                            self.text1.grid(row=2, column=2, padx=60), self.text2.grid(row=2, column=4, padx=40)])
-        btn1.grid(row=2, column=5)
+                          command= lambda: [self.setValues(), self.dropdown1.grid_forget(), self.dropdown2.grid_forget(), btn1.grid_forget(), 
+                                            commentBaudrate.grid_forget(),
+                                            self.text1.grid(row=1, column=2, padx=60), self.text2.grid(row=1, column=4, padx=40)])
+        btn1.grid(row=2, column=5, padx=60)
         
 
 
@@ -69,8 +72,8 @@ class MyGUI:
         self.baudText = "Value fetching failed"
 
 
-        self.text1 = tk.Label(self.window, text= self.portText)
-        self.text2 = tk.Label(self.window, text=("Baudrate = ", baudrate))
+        self.text1 = tk.Label(self.window, text= self.portText, font=('Calibre', 9))
+        self.text2 = tk.Label(self.window, text=("Baudrate = ", baudrate), font=('Calibre', 9))
         
 
         self.dropdown2 = tk.OptionMenu(self.window, self.defaultBaudrateDD, *baudrates)
@@ -79,7 +82,7 @@ class MyGUI:
 
         commentBaudrate = tk.Label(self.window, text="Baudrate must be same as \n configured in Arduino code \n\n" 
                                    "If unknown, use 115200!", font=('Calibre', 10))
-        commentBaudrate.grid(row=3, column=5, padx=40)
+        commentBaudrate.grid(row=3, column=4, padx=40)
 
 
 
@@ -121,6 +124,8 @@ class MyGUI:
         comport = self.defaultComDD.get().removesuffix("- Kommunikationsanschluss (COM1)") 
         self.text1['text'] = "Port = " + comport 
         self.text2['text'] = "Baudrate = " + self.defaultBaudrateDD.get()
+        #changes buttons to text lables
+
         setupArduino()        
 
 
@@ -137,7 +142,8 @@ class MyGUI:
     #def setBitrate(self):
 
 def setupArduino():
-    arduinoData = serial.Serial(comport)
+    arduinoData = serial.Serial(comport, baudrate)
+    time.sleep(1)
 
 
 
@@ -146,4 +152,5 @@ def setupArduino():
 
 
 MyGUI()
+print("Testlol")
 #calls class to run programm
