@@ -43,8 +43,7 @@ class MyGUI:
         baudrates = [300, 600, 1200, 2400, 4800, 9600, 14400, 19200, 28800, 31250, 38400, 57600, 115200]
         #Possible baudrates for the Arduino, should usually be 115200
 
-        self.showDropdowns = tk.BooleanVar(self.window)
-        self.showDropdowns = True
+
 
         layoutframe = tk.Frame(self.window)
         layoutframe.columnconfigure(0, weight=1, uniform='sixth')
@@ -59,9 +58,9 @@ class MyGUI:
         btn1 = tk.Button(self.window, text='Set Port / baudrate', font=('Arial', 13),
                           command= lambda: [self.setValues(), self.dropdown1.grid_forget(), self.dropdown2.grid_forget(), btn1.grid_forget(), 
                                             commentBaudrate.grid_forget(),
-                                            self.text1.grid(row=1, column=2, padx=60), self.text2.grid(row=1, column=4, padx=40)])
+                                            self.text1.grid(row=1, column=1, padx=60), self.text2.grid(row=1, column=2, padx=40)])
         btn1.grid(row=2, column=5, padx=60)
-        
+        #button that removes the dropdowns, sets the arduino conection and adds the lables
 
 
         self.dropdown1 = tk.OptionMenu(self.window, self.defaultComDD, *comlist)
@@ -70,11 +69,11 @@ class MyGUI:
         
         self.portText = "Value fetching failed"
         self.baudText = "Value fetching failed"
-
+        #two strings for the lables below
 
         self.text1 = tk.Label(self.window, text= self.portText, font=('Calibre', 9))
         self.text2 = tk.Label(self.window, text=("Baudrate = ", baudrate), font=('Calibre', 9))
-        
+        #texts to replace the dropdown menus after the baudrate / port is choosen
 
         self.dropdown2 = tk.OptionMenu(self.window, self.defaultBaudrateDD, *baudrates)
         self.dropdown2.grid(row=2, column=4, padx=40)
@@ -83,36 +82,14 @@ class MyGUI:
         commentBaudrate = tk.Label(self.window, text="Baudrate must be same as \n configured in Arduino code \n\n" 
                                    "If unknown, use 115200!", font=('Calibre', 10))
         commentBaudrate.grid(row=3, column=4, padx=40)
+        #comment for choosing the baudrate
 
-
-
-        str_out=tk.StringVar(self.window)
-        str_out.set("Output")
-
-
-        #layoutframe.pack(fill='x')
-
-        #self.label = tk.Label(self.window, text="Your Message", font=('Arial', 18))
-        # self.label.pack(padx=10, pady=12)
-
-        # self.textbox = tk.Text(self.window, height=5, font=('Arial', 15))
-        # self.textbox.pack(padx=10, pady=10)
-
-
-        # self.check_state = tk.IntVar()
-        # self.check = tk.Checkbutton(self.window, text="Show Messagebox", font=('Arial', 13), variable=self.check_state)
-        # self.check.pack(padx=10, pady=10)
-
-        # self.button = tk.Button(self.window, text="Show message", font=('Arial', 13), command=self.show_message)
-        # self.button.pack(padx=10, pady=10)
-        
 
 
 
         self.window.mainloop()
 
     def setValues(self):
-        #self.str_out.set(self.defaultComDD.get())
         print(self.defaultComDD.get())
         comport = self.defaultComDD.get()
         print(comport)
@@ -127,16 +104,6 @@ class MyGUI:
         #changes buttons to text lables
 
         setupArduino()        
-
-
-    def show_message(self):
-        if self.check_state.get() == 0:
-            #when starting in the beginning of the Textbox we need index 1 as a string, and index to as the end
-            #also: the index starts at 1, why???
-            print(self.textbox.get('1.0', tk.END)) 
-        else:
-            messagebox.showinfo(title="Message", message=self.textbox.get('1.0', tk.END))
-    
 
 
     #def setBitrate(self):
