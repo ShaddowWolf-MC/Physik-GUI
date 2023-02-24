@@ -5,12 +5,13 @@ import serial
 import serial.tools.list_ports
 import sys
 import time
+import threading
 
 
 
 baudrate = 115200
 comport = 'com1'
-#arduinoData = serial.Serial('com3')
+arduinoData = serial.Serial(comport, baudrate)
 
 print("TKinter Version", tk.TkVersion)
 print("Python Version", sys.version)
@@ -84,6 +85,11 @@ class MyGUI:
         commentBaudrate.grid(row=3, column=4, padx=40)
         #comment for choosing the baudrate
 
+        self.state = tk.IntVar
+        self.c1 = tk.Checkbutton(self.window, text='Disable Serial connection \n for Debugging',variable=self.state, onvalue=1, offvalue=0)
+        self.c1.grid(row=2, column=1, padx=60)
+
+
 
 
 
@@ -103,7 +109,8 @@ class MyGUI:
         self.text2['text'] = "Baudrate = " + self.defaultBaudrateDD.get()
         #changes buttons to text lables
 
-        setupArduino()        
+        
+        setupArduino()      
 
 
     #def setBitrate(self):
@@ -111,9 +118,26 @@ class MyGUI:
 def setupArduino():
     arduinoData = serial.Serial(comport, baudrate)
     time.sleep(1)
+    DataFetcher()
 
 
+class DataFetcher:
 
+    def fetchData(self):
+        while True:
+            while (arduinoData.inWaiting() == 0):
+                #E
+                pass
+            dataPacket = arduinoData.readline()
+            dataPacket = str(dataPacket, 'utf-8')
+            dataPacket = dataPacket.strip('\r\n')
+            print(dataPacket)
+
+    def __init__(self):
+        t = threading.Thread(target=self.fetchData)
+        t.start()
+
+            
 
 
 
@@ -121,3 +145,4 @@ def setupArduino():
 MyGUI()
 print("Testlol")
 #calls class to run programm
+
