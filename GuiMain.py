@@ -58,8 +58,8 @@ class MyGUI:
 
         btn1 = tk.Button(self.window, text='Set Port / baudrate', font=('Arial', 13),
                           command= lambda: [self.setValues(), self.dropdown1.grid_forget(), self.dropdown2.grid_forget(), btn1.grid_forget(), 
-                                            commentBaudrate.grid_forget(),
-                                            self.text1.grid(row=1, column=1, padx=60), self.text2.grid(row=1, column=2, padx=40)])
+                                            commentBaudrate.grid_forget(), self.c1.grid_forget(), 
+                                            self.text1.grid(row=1, column=1, padx=5), self.text2.grid(row=1, column=2, padx=5)])
         btn1.grid(row=2, column=5, padx=60)
         #button that removes the dropdowns, sets the arduino conection and adds the lables
 
@@ -72,8 +72,8 @@ class MyGUI:
         self.baudText = "Value fetching failed"
         #two strings for the lables below
 
-        self.text1 = tk.Label(self.window, text= self.portText, font=('Calibre', 9))
-        self.text2 = tk.Label(self.window, text=("Baudrate = ", baudrate), font=('Calibre', 9))
+        self.text1 = tk.Label(self.window, text= self.portText, font=('Calibre', 8))
+        self.text2 = tk.Label(self.window, text=("Baudrate = ", baudrate), font=('Calibre', 8))
         #texts to replace the dropdown menus after the baudrate / port is choosen
 
         self.dropdown2 = tk.OptionMenu(self.window, self.defaultBaudrateDD, *baudrates)
@@ -85,11 +85,11 @@ class MyGUI:
         commentBaudrate.grid(row=3, column=4, padx=40)
         #comment for choosing the baudrate
 
-        self.state = tk.IntVar
-        self.c1 = tk.Checkbutton(self.window, text='Disable Serial connection \n for Debugging',variable=self.state, onvalue=1, offvalue=0)
+        self.checkVar = tk.IntVar()
+        self.c1 = tk.Checkbutton(self.window, text='Disable Serial connection \n for Debugging',variable=self.checkVar)
         self.c1.grid(row=2, column=1, padx=60)
 
-
+        
 
 
 
@@ -109,8 +109,12 @@ class MyGUI:
         self.text2['text'] = "Baudrate = " + self.defaultBaudrateDD.get()
         #changes buttons to text lables
 
-        
-        setupArduino()      
+        if self.checkVar.get() == 0:
+            print("Unchecked")
+            setupArduino()  
+        else:
+            print("Checked")
+        #functionallity for out Debug button
 
 
     #def setBitrate(self):
