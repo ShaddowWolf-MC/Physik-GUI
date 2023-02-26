@@ -6,6 +6,9 @@ import serial.tools.list_ports
 import sys
 import time
 import threading
+import pandas as pd
+import matplotlib.pyplot as plt
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
 
 
@@ -59,7 +62,8 @@ class MyGUI:
         btn1 = tk.Button(self.window, text='Set Port / baudrate', font=('Arial', 13),
                           command= lambda: [self.setValues(), self.dropdown1.grid_forget(), self.dropdown2.grid_forget(), btn1.grid_forget(), 
                                             commentBaudrate.grid_forget(), self.c1.grid_forget(), 
-                                            self.text1.grid(row=1, column=1, padx=5), self.text2.grid(row=1, column=2, padx=5)])
+                                            self.text1.grid(row=1, column=1, padx=5), self.text2.grid(row=1, column=2, padx=5),
+                                            self.buildGUInew()])
         btn1.grid(row=2, column=5, padx=60)
         #button that removes the dropdowns, sets the arduino conection and adds the lables
 
@@ -117,12 +121,15 @@ class MyGUI:
         #functionallity for out Debug button
 
 
-    #def setBitrate(self):
+    def buildGUInew(self):
+        time.sleep(1)
+        self.c1.grid(row=1, column=1, padx=100)
 
 def setupArduino():
     arduinoData = serial.Serial(comport, baudrate)
     time.sleep(1)
     DataFetcher()
+
 
 
 class DataFetcher:
