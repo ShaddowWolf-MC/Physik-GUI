@@ -14,7 +14,7 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
 baudrate = 115200
 comport = 'com1'
-arduinoData = serial.Serial(comport, baudrate)
+#arduinoData = serial.Serial(comport, baudrate)
 
 print("TKinter Version", tk.TkVersion)
 print("Python Version", sys.version)
