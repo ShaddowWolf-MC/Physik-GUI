@@ -11,10 +11,10 @@ import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
 
-
-baudrate = 115200
-comport = 'com1'
-#arduinoData = serial.Serial(comport, baudrate)
+comport = '1'
+baudrate = 0
+arduinoDataPassFrame = []
+arduinoDataPassFrame.append(serial.Serial())
 
 print("TKinter Version", tk.TkVersion)
 print("Python Version", sys.version)
@@ -125,21 +125,35 @@ class MyGUI:
         time.sleep(1)
         self.c1.grid(row=1, column=1, padx=100)
 
+
+
 def setupArduino():
+    
+    comlist = serial.tools.list_ports.comports()
+    connected = []
+    for element in comlist:
+        connected.append(element.device)
+    print("Connected COM ports: " + str(connected))
+    #get all conected com ports
+
     arduinoData = serial.Serial(comport, baudrate)
     time.sleep(1)
     DataFetcher()
 
+def passArduinoObj(arduinoData):
+    print(arduinoData)
+    arduinoDataPassFrame.append(arduinoData)
+
 
 
 class DataFetcher:
-
+    arduinoData1 = arduinoDataPassFrame[0] # pylint:disable=invalid-name,used-before-assignment,undefined-variable
     def fetchData(self):
         while True:
-            while (arduinoData.inWaiting() == 0):
+            while (arduinoData1.inWaiting() == 0): # pylint:disable=invalid-name,used-before-assignment,undefined-variable
                 #E
                 pass
-            dataPacket = arduinoData.readline()
+            dataPacket = arduinoData1.readline()
             dataPacket = str(dataPacket, 'utf-8')
             dataPacket = dataPacket.strip('\r\n')
             print(dataPacket)
@@ -147,6 +161,7 @@ class DataFetcher:
     def __init__(self):
         t = threading.Thread(target=self.fetchData)
         t.start()
+        print("Thread Started")
 
             
 
