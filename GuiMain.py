@@ -163,6 +163,49 @@ class DataFetcher:
         t.start()
         print("Thread Started")
 
+    def handShake():
+        cmd = 'C'
+        cmd=cmd+'\r'
+        arduinoData1.write(cmd.encode())
+
+        
+    
+#bool handshake(){
+#  bool hasfinished1, hasfinished2 = false;
+#  string recive1, recive2;
+#  while(hasfinished1 != true){
+#    if(Serial.available() != 0){
+#      recive1 = Serial.readStringUntil('\r');
+#      if(recive1 != "C"){
+#      }
+#      else{
+#        Serial.println('C');
+#        hasfinished1 = true;
+#        unsigned long currentMillis = millis();  // get the current time
+#        if (currentMillis - previousMillis >= intervalHandshake) {
+#          previousMillis = currentMillis;  // update the previous time
+#        }
+#      }
+#    }
+#  }
+#  while(hasfinished2 != true){
+#    if(Serial.available() != 0){
+#      recive2 = Serial.readStringUntil('\r');
+#     if(recive2 != "R"){
+#     }
+#      else{
+#        hasfinished2 = true;
+#        unsigned long currentMillis = millis();  // get the current time
+#        if (currentMillis - previousMillis >= intervalHandshake) {
+#          previousMillis = currentMillis;  // update the previous time
+#        }
+#        return true;
+#      }
+#    }
+#  }
+#}
+
+
             
 
 
