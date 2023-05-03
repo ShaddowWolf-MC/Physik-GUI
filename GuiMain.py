@@ -148,7 +148,15 @@ def passArduinoObj(arduinoData):
 
 class DataFetcher:
     arduinoData1 = arduinoDataPassFrame[0] # pylint:disable=invalid-name,used-before-assignment,undefined-variable
+
+    def __init__(self):
+        t = threading.Thread(target=self.fetchData)
+        t.start()
+        print("Thread Started")
+
+
     def fetchData(self):
+        self.handShake()
         while True:
             while (arduinoData1.inWaiting() == 0): # pylint:disable=invalid-name,used-before-assignment,undefined-variable
                 #E
@@ -158,15 +166,26 @@ class DataFetcher:
             dataPacket = dataPacket.strip('\r\n')
             print(dataPacket)
 
-    def __init__(self):
-        t = threading.Thread(target=self.fetchData)
-        t.start()
-        print("Thread Started")
+    def handShake(self):
+        stayInLoop = True
+        cmd1 = "C"
+        cmd1=cmd1+'\r'
+        arduinoData1.write(cmd1.encode())
+        while stayInLoop:
+            while arduinoData1.inWaiting() == 0:
+                pass
+            dataPacket = arduinoData1.readline()
+            dataPacket = str(dataPacket, 'utf-8')
+            dataPacket = dataPacket.strip('\r\n')
+            if("C" in dataPacket):
+                cmd2 = "R"
+                cmd2=cmd2+'\r'
+                arduinoData1.write(cmd2.encode())
+                stayInLoop = False
 
-    def handShake():
-        cmd = 'C'
-        cmd=cmd+'\r'
-        arduinoData1.write(cmd.encode())
+
+
+
 
         
     
