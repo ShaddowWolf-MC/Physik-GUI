@@ -18,7 +18,7 @@ arduinoDataPassFrame = []
 arduinoDataPassFrame.append(serial.Serial())
 #First row is Time
 #Second row is Round
-dataTable = np.zeros(130, 130)
+dataTable = np.zeros((130, 130))
 print("TKinter Version", tk.TkVersion)
 print("Python Version", sys.version)
 #Testdata to confirm working code
@@ -27,7 +27,7 @@ class MyGUI:
     def __init__(self):
         
         self.window = tk.Tk()
-        self.window.minsize(500, 500)
+        self.window.minsize(900, 600)
         self.window.title("Physics GUI Window - Dev_Version")
         #Set window, window size and window title
 
@@ -64,9 +64,7 @@ class MyGUI:
 
         btn1 = tk.Button(self.window, text='Set Port / baudrate', font=('Arial', 13),
                           command= lambda: [self.setValues(), self.dropdown1.grid_forget(), self.dropdown2.grid_forget(), btn1.grid_forget(), 
-                                            commentBaudrate.grid_forget(), self.checkbox.grid_forget(), 
-                                            self.text1.grid(row=1, column=1, padx=5), self.text2.grid(row=1, column=2, padx=5),
-                                            self.buildGUInew()])
+                                            commentBaudrate.grid_forget(), self.checkbox.grid_forget(), self.buildGUInew()])
         btn1.grid(row=2, column=5, padx=60)
         #button that removes the dropdowns, sets the arduino conection and adds the lables
 
@@ -126,7 +124,9 @@ class MyGUI:
 
     def buildGUInew(self):
         time.sleep(1)
-        self.checkbox.grid(row=1, column=1, padx=100)
+        self.text1.grid(row=1, column=1, padx=100)
+        self.text2.grid(row=1, column=2, padx=100)
+        #self.checkbox.grid(row=1, column=1, padx=100)
 
 
 
