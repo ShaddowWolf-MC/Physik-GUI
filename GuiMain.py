@@ -9,13 +9,16 @@ import threading
 import pandas as pd
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+import numpy as np
 
 
 comport = '1'
 baudrate = 0
 arduinoDataPassFrame = []
 arduinoDataPassFrame.append(serial.Serial())
-
+#First row is Time
+#Second row is Round
+dataTable = np.zeros(130, 130)
 print("TKinter Version", tk.TkVersion)
 print("Python Version", sys.version)
 #Testdata to confirm working code
@@ -61,7 +64,7 @@ class MyGUI:
 
         btn1 = tk.Button(self.window, text='Set Port / baudrate', font=('Arial', 13),
                           command= lambda: [self.setValues(), self.dropdown1.grid_forget(), self.dropdown2.grid_forget(), btn1.grid_forget(), 
-                                            commentBaudrate.grid_forget(), self.c1.grid_forget(), 
+                                            commentBaudrate.grid_forget(), self.checkbox.grid_forget(), 
                                             self.text1.grid(row=1, column=1, padx=5), self.text2.grid(row=1, column=2, padx=5),
                                             self.buildGUInew()])
         btn1.grid(row=2, column=5, padx=60)
@@ -90,8 +93,8 @@ class MyGUI:
         #comment for choosing the baudrate
 
         self.checkVar = tk.IntVar()
-        self.c1 = tk.Checkbutton(self.window, text='Disable Serial connection \n for Debugging',variable=self.checkVar)
-        self.c1.grid(row=2, column=1, padx=60)
+        self.checkbox = tk.Checkbutton(self.window, text='Disable Serial connection \n for Debugging',variable=self.checkVar)
+        self.checkbox.grid(row=2, column=1, padx=60)
 
         
 
@@ -123,7 +126,7 @@ class MyGUI:
 
     def buildGUInew(self):
         time.sleep(1)
-        self.c1.grid(row=1, column=1, padx=100)
+        self.checkbox.grid(row=1, column=1, padx=100)
 
 
 
@@ -164,6 +167,10 @@ class DataFetcher:
             dataPacket = arduinoData1.readline()
             dataPacket = str(dataPacket, 'utf-8')
             dataPacket = dataPacket.strip('\r\n')
+            workPiece = dataPacket.split(":")
+            #First part is Sensor, Second is Time, Third is Round
+            if(workPiece[1].isdigit):
+                dataTable[workPiece[1]][workPiece[3]] = workPiece[2] 
             print(dataPacket)
 
     def handShake(self):
