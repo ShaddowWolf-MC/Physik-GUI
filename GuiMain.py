@@ -9,7 +9,10 @@ import threading
 import pandas as pd
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+from matplotlib.figure import Figure
 import numpy as np
+import matplotlib
+matplotlib.use('TkAgg')
 
 
 comport = '1'
@@ -38,6 +41,10 @@ class MyGUI:
             connected.append(element.device)
         print("Connected COM ports: " + str(connected))
         #get all conected com ports
+
+        #Create figure object for graph later + axes obj
+        self.fig = Figure(figsize=(7, 5), dpi=100)
+        self.ax = self.fig.add_subplot(111)
 
 
         self.defaultComDD = tk.StringVar(self.window)
@@ -97,7 +104,7 @@ class MyGUI:
         
 
 
-
+        self.update_plot()
         self.window.mainloop()
 
     def setValues(self):
@@ -127,6 +134,30 @@ class MyGUI:
         self.text1.grid(row=1, column=1, padx=100)
         self.text2.grid(row=1, column=2, padx=100)
         #self.checkbox.grid(row=1, column=1, padx=100)
+        self.canvas = FigureCanvasTkAgg(self.fig, master=self.window)
+        self.canvas.get_tk_widget().grid(row=4, column=1, sticky='nsew')
+
+    def update_data(self):
+        # Generate random data
+        data = np.random.rand(10)
+
+        # Update the plot data
+        self.ax.clear()
+        self.ax.plot(data)
+        self.ax.set_xlabel("Time")
+        self.ax.set_ylabel("Value")
+
+    # Create a function that updates the plot
+    def update_plot(self):
+        # Update the plot data
+        self.update_data()
+
+        # Redraw the plot
+        self.fig.canvas.draw()
+        self.fig.tight_layout()
+
+        # Schedule the update function to run again in 1 second
+        self.window.after(1000, self.update_plot)
 
 
 
