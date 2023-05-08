@@ -13,18 +13,25 @@ from matplotlib.figure import Figure
 import numpy as np
 import matplotlib
 matplotlib.use('TkAgg')
+import seaborn as sns
 
 
+#Testdata & Implementory data start
 comport = '1'
 baudrate = 0
 arduinoDataPassFrame = []
 arduinoDataPassFrame.append(serial.Serial())
-#First row is Time
-#Second row is Round
-dataTable = np.zeros((130, 130))
+#XAxis row is Sensor
+#Yaxis row is Time
+dataTable = np.zeros((13, 130))
+dataTableTestData = np.zeros((13, 130))
 print("TKinter Version", tk.TkVersion)
 print("Python Version", sys.version)
-#Testdata to confirm working code
+activeAtLine = 0
+lastWrittenSensor = 0
+#Colours for the lables for graph lines
+colors = ['red', 'green', 'blue', 'orange', 'purple']
+#Testdata to confirm working code ends here
 
 class MyGUI:
     def __init__(self):
@@ -33,7 +40,6 @@ class MyGUI:
         self.window.minsize(900, 600)
         self.window.title("Physics GUI Window - Dev_Version")
         #Set window, window size and window title
-
 
         comlist = serial.tools.list_ports.comports()
         connected = []
@@ -131,26 +137,33 @@ class MyGUI:
 
     def buildGUInew(self):
         time.sleep(1)
+        self.generateTestdata() 
         self.text1.grid(row=1, column=1, padx=100)
         self.text2.grid(row=1, column=2, padx=100)
         #self.checkbox.grid(row=1, column=1, padx=100)
         self.canvas = FigureCanvasTkAgg(self.fig, master=self.window)
         self.canvas.get_tk_widget().grid(row=4, column=1, sticky='nsew')
 
-    def update_data(self):
-        # Generate random data
-        data = np.random.rand(10)
-
+    def update_data(self, dataTable):
         # Update the plot data
         self.ax.clear()
-        self.ax.plot(data)
+        #Set back to dataTable later!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        self.ax.plot(dataTableTestData)
+        for i in range(16):
+            color = colors[i % len(colors)]
+            self.ax.plot(dataTableTestData[:,i], color=color)
+
+            # Create a label widget for the current graph and add it to the Tkinter window
+            self.label = tk.Label(self.window, text=f'Graph {i}', bg=color)
+            self.label.grid(row=i+1, column=0, sticky='w')
+
         self.ax.set_xlabel("Time")
         self.ax.set_ylabel("Value")
 
     # Create a function that updates the plot
     def update_plot(self):
         # Update the plot data
-        self.update_data()
+        self.update_data(dataTableTestData)
 
         # Redraw the plot
         self.fig.canvas.draw()
@@ -158,6 +171,12 @@ class MyGUI:
 
         # Schedule the update function to run again in 1 second
         self.window.after(1000, self.update_plot)
+
+    def generateTestdata(self):
+        for i in range(1, 10):
+            for j in range(1,11):
+                dataTableTestData[j][i] = np.random.randint(0, 15)
+
 
 
 
@@ -199,9 +218,14 @@ class DataFetcher:
             dataPacket = str(dataPacket, 'utf-8')
             dataPacket = dataPacket.strip('\r\n')
             workPiece = dataPacket.split(":")
-            #First part is Sensor, Second is Time, Third is Round
-            if(workPiece[1].isdigit):
-                dataTable[workPiece[1]][workPiece[3]] = workPiece[2] 
+            workPiece[1].strip(":")
+            workPiece[2].strip(":")
+            workPiece[3].strip(":")
+            #First part is Sensor, Second is Round, Third is Time
+            if(workPiece[1].isdigit and workPiece[2].isdigit and workPiece[3].isdigit):
+                dataTable[workPiece[1]][workPiece[2]] = workPiece[3]
+                activeAtLine = int(workPiece[2])
+                lastWrittenSensor = int(workPiece[1])
             print(dataPacket)
 
     def handShake(self):
