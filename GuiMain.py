@@ -17,10 +17,9 @@ import seaborn as sns
 
 
 #Testdata & Implementory data start
-comport = '1'
-baudrate = 0
-arduinoDataPassFrame = []
-arduinoDataPassFrame.append(serial.Serial())
+comport = 'Com5'
+baudrate = 115200
+arduinoData = serial.Serial(comport, baudrate)
 #XAxis row is Sensor
 #Yaxis row is Time
 dataTable = np.zeros((13, 130))
@@ -137,7 +136,7 @@ class MyGUI:
 
     def buildGUInew(self):
         time.sleep(1)
-        self.generateTestdata() 
+        #self.generateTestdata() 
         self.text1.grid(row=1, column=1, padx=100)
         self.text2.grid(row=1, column=2, padx=100)
         #self.checkbox.grid(row=1, column=1, padx=100)
@@ -148,22 +147,22 @@ class MyGUI:
         # Update the plot data
         self.ax.clear()
         #Set back to dataTable later!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        self.ax.plot(dataTableTestData)
+        self.ax.plot(dataTable)
         for i in range(16):
             color = colors[i % len(colors)]
-            self.ax.plot(dataTableTestData[:,i], color=color)
+            self.ax.plot(dataTable[:,i], color=color)
 
             # Create a label widget for the current graph and add it to the Tkinter window
             self.label = tk.Label(self.window, text=f'Graph {i}', bg=color)
             self.label.grid(row=i+1, column=0, sticky='w')
 
-        self.ax.set_xlabel("Time")
-        self.ax.set_ylabel("Value")
+        self.ax.set_xlabel("Sensor")
+        self.ax.set_ylabel("Zeit bei Sensor")
 
     # Create a function that updates the plot
     def update_plot(self):
         # Update the plot data
-        self.update_data(dataTableTestData)
+        self.update_data(dataTable)
 
         # Redraw the plot
         self.fig.canvas.draw()
@@ -188,19 +187,19 @@ def setupArduino():
         connected.append(element.device)
     print("Connected COM ports: " + str(connected))
     #get all conected com ports
-
-    arduinoData = serial.Serial(comport, baudrate)
     time.sleep(1)
     DataFetcher()
 
-def passArduinoObj(arduinoData):
-    print(arduinoData)
-    arduinoDataPassFrame.append(arduinoData)
+#def passArduinoObj(arduinoData):
+    #print(arduinoData)
+    #arduinoDataPassFrame.append(arduinoData)
 
 
 
 class DataFetcher:
-    arduinoData1 = arduinoDataPassFrame[0] # pylint:disable=invalid-name,used-before-assignment,undefined-variable
+    #comport = 'Com5'
+    #baudrate = 115200
+    #arduinoData = serial.Serial(comport, baudrate) # pylint:disable=invalid-name,used-before-assignment,undefined-variable
 
     def __init__(self):
         t = threading.Thread(target=self.fetchData)
@@ -209,40 +208,50 @@ class DataFetcher:
 
 
     def fetchData(self):
-        self.handShake()
+        #arduinoData1 = arduinoDataPassFrame[0]\
+        
+        #self.handShake()
         while True:
-            while (arduinoData1.inWaiting() == 0): # pylint:disable=invalid-name,used-before-assignment,undefined-variable
+            while (arduinoData.inWaiting() == 0): # pylint:disable=invalid-name,used-before-assignment,undefined-variable
                 #E
                 pass
-            dataPacket = arduinoData1.readline()
+            dataPacket = arduinoData.readline()
             dataPacket = str(dataPacket, 'utf-8')
             dataPacket = dataPacket.strip('\r\n')
             workPiece = dataPacket.split(":")
+            workPiece[0].strip(":")
             workPiece[1].strip(":")
             workPiece[2].strip(":")
-            workPiece[3].strip(":")
+            print(workPiece[0])
+            print(workPiece[1])
+            print(workPiece[2])
+
             #First part is Sensor, Second is Round, Third is Time
-            if(workPiece[1].isdigit and workPiece[2].isdigit and workPiece[3].isdigit):
-                dataTable[workPiece[1]][workPiece[2]] = workPiece[3]
+            if(workPiece[0].isdigit and workPiece[1].isdigit and workPiece[2].isdigit):
+                dataToWrite = float(workPiece[2])
+                dataTable[int(workPiece[0])][int(workPiece[1])] = dataToWrite/1000
                 activeAtLine = int(workPiece[2])
-                lastWrittenSensor = int(workPiece[1])
+                lastWrittenSensor = int(workPiece[0])
             print(dataPacket)
 
     def handShake(self):
+        comport = 'Com5'
+        baudrate = 115200
+        arduinoData = serial.Serial(comport, baudrate)
         stayInLoop = True
         cmd1 = "C"
         cmd1=cmd1+'\r'
-        arduinoData1.write(cmd1.encode())
+        arduinoData.write(cmd1.encode())
         while stayInLoop:
-            while arduinoData1.inWaiting() == 0:
+            while arduinoData.inWaiting() == 0:
                 pass
-            dataPacket = arduinoData1.readline()
+            dataPacket = arduinoData.readline()
             dataPacket = str(dataPacket, 'utf-8')
             dataPacket = dataPacket.strip('\r\n')
             if("C" in dataPacket):
                 cmd2 = "R"
                 cmd2=cmd2+'\r'
-                arduinoData1.write(cmd2.encode())
+                arduinoData.write(cmd2.encode())
                 stayInLoop = False
 
 
